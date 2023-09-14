@@ -1,5 +1,6 @@
 package student.example.orm.repositories;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -24,25 +25,61 @@ public class DumyRepository extends Repository {
     }
 
     @Override
-    public void delete(Entity entity) {
-        
-        super.delete(entity);
-    }
-
-    @Override
     public Entity read(int id) {
         
         return super.read(id);
+
+        Statement st;
+        DummyEntity dummyentity = null;
+        try {
+            st = conn.createStatement();
+            ResultSet rs= st.executeQuery("SELECT *FROM Dummyentity where entity_id="+ id);
+            rs.next();
+             dummyentity =  new DummyEntity(
+                rs.getInt(1),
+                rs.getString(2),
+                rs.getString(3));
+            
+            } catch (SQLException e) {
+               
+            e.printStackTrace();
+        }
+        return dummyentity;
+
+
     }
 
     @Override
     public void update(Entity entity) {
-        
-        super.update(entity);
+
+    
     }
+    
+
+
+    @Override
+    public void delete(Entity entity) {
+        
+        super.delete(entity);
+
+        DummyEntity dummyEntity = (DummyEntity)entity;
+        Statement st;
+        try {
+            st = conn.createStatement();
+            st.executeUpdate("DELETE FROM DummyEntity WHERE entity_id ="+ dummyEntity.getId());
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+        }
+    }
+
+   
+
+    
     
 
     
     
     
 }
+
