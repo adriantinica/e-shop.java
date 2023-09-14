@@ -1,0 +1,5 @@
+FROM postgres:15.4-alpine3.18
+ENV POSTGRES_USED postgres
+ENV POSTGRES_PASSWORD laser112
+ENV POSTGRES_DB e_shop
+COPY e_shop.sql /docker-entrypoint-initdb.d/
