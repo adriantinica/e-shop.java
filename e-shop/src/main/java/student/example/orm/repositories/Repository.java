@@ -10,7 +10,7 @@ import student.example.orm.entities.Entity;
 
 public abstract class Repository {
     
-    private final String url = "jdbc:postgresql://localhost:postgres:5432/e_shop?user=postgres&password=Laser112&ssl=false";
+    private final String url = "jdbc:postgresql://localhost:postgres/e_shop?user=postgres&password=Laser112&ssl=false";
     protected Connection conn;
 
     public Repository(){
