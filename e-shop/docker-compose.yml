@@ -1,0 +1,14 @@
+version: '3.8'
+services: 
+  pg:
+    image: e-shop-pg
+    restart: always
+    environment:
+      -POSTGRES_USED: postgres
+      -POSTGRES_PASSWORD: laser112
+      -POSTGRES_DB: e_shop
+
+    
+
+    volumes:
+      - ./pg-docker/data:/var/lib/postgresql/data
