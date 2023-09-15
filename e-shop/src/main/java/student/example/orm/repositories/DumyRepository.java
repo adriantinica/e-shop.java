@@ -27,15 +27,14 @@ public class DumyRepository extends Repository {
     @Override
     public Entity read(int id) {
         
-        return super.read(id);
-
         Statement st;
-        DummyEntity dummyentity = null;
+        
+        Entity entity = null;
         try {
-            st = conn.createStatement();
+             st = conn.createStatement();
             ResultSet rs= st.executeQuery("SELECT *FROM Dummyentity where entity_id="+ id);
             rs.next();
-             dummyentity =  new DummyEntity(
+            entity =  new DummyEntity(
                 rs.getInt(1),
                 rs.getString(2),
                 rs.getString(3));
@@ -43,15 +42,31 @@ public class DumyRepository extends Repository {
             } catch (SQLException e) {
                
             e.printStackTrace();
+        
+
+            if (entity == null) {
+                 entity = super.read(id);
+            
+            }
+           
         }
-        return dummyentity;
-
-
+        return entity;
+        
     }
 
     @Override
     public void update(Entity entity) {
+        
+        super.update(entity);
 
+        Statement st;
+        try {
+            st = conn.createStatement();
+            st.executeUpdate("UPDATE Entity SET createdat ='"+ entity.getCreatedAt()+  "' WHERE id = " +entity.getId());
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+        }
     
     }
     
@@ -72,6 +87,17 @@ public class DumyRepository extends Repository {
             e.printStackTrace();
         }
     }
+
+   
+
+    
+    
+
+    
+    
+    
+}
+
 
    
 
