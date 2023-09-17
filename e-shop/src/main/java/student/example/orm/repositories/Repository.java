@@ -11,7 +11,7 @@ import student.example.orm.entities.Entity;
 
 public abstract class Repository {
     
-    private final String url = "jdbc:postgresql://localhost:postgres:5432/e_shop?user=postgres&password=Laser112&ssl=false";
+    private final String url = "jdbc:postgresql://localhost:5432/e_shop?user=postgres&password=Laser112&ssl=false";
     protected Connection conn;
 
     public Repository(){
@@ -25,8 +25,18 @@ public abstract class Repository {
     public void create (Entity entity){
         Statement st;
         try {
+
+            //using REFLECTION API
+            // 1. get the entity class name :
+            String entityClassName = entity.getClass().getName();
+            String [] parts = entityClassName.split("\\.");
+            entityClassName = parts[parts.length-1];
+            System.out.println("class name: "+entityClassName);
+
+
+
             st = conn.createStatement();
-            st.executeUpdate("INSERT into Entity VALUES("+"'DummyEntity'"+ entity.getId()+ entity.getCreatedAt()+"')");
+            st.executeUpdate("INSERT into Entity VALUES("+entity.getId()+",'"+ entityClassName +"','"+ entity.getCreatedAt()+"')");
         } catch (SQLException e) {
             e.printStackTrace();
         }
