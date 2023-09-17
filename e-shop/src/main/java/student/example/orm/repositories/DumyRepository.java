@@ -9,6 +9,11 @@ import student.example.orm.entities.Entity;
 
 public class DumyRepository extends Repository {
 
+
+
+
+
+
     @Override
     public void create(Entity entity) {
         
@@ -18,7 +23,7 @@ public class DumyRepository extends Repository {
         DummyEntity dummyEntity = (DummyEntity)entity;
         try {
             st = conn.createStatement();
-            st.executeUpdate("INSERT into DummyEntity VALUES("+ entity.getId()+ entity.getCreatedAt()+dummyEntity.getTestValue()+"')");
+            st.executeUpdate("INSERT into DummyEntity VALUES("+ entity.getId()+",'"+dummyEntity.getTestValue()+"')");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -87,17 +92,6 @@ public class DumyRepository extends Repository {
             e.printStackTrace();
         }
     }
-
-   
-
-    
-    
-
-    
-    
-    
-}
-
 
    
 
