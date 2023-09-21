@@ -1,27 +1,63 @@
-package student.example.orm.entities;
+package student.example.orm.repositories;
 
-public class DummyEntity extends Entity {
-    private String testValue;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-    public DummyEntity(int id, String createdAt, String testValue) {
-        super(id, createdAt);
-        this.testValue = testValue;
-    }
+import student.example.orm.entities.DummyEntity;
+import student.example.orm.entities.Entity;
 
-    public String getTestValue() {
-        return testValue;
-    }
+public class DummyRepository extends Repository {
 
-    public void setTestValue(String testValue) {
-        this.testValue = testValue;
-    }
 
-    @Override
-    public String toString() {
-        return super.toString()+" DummyEntity [testValue=" + testValue + "]";
-    }
+
+
+
+
+   
 
     
 
+    @Override
+    public void update(Entity entity) {
+        
+        super.update(entity);
 
+        Statement st;
+        try {
+            st = conn.createStatement();
+            st.executeUpdate("UPDATE Entity SET createdat ='"+ entity.getCreatedAt()+  "' WHERE id = " +entity.getId());
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+        }
+    
+    }
+    
+
+
+    @Override
+    public void delete(Entity entity) {
+        
+        super.delete(entity);
+
+        DummyEntity dummyEntity = (DummyEntity)entity;
+        Statement st;
+        try {
+            st = conn.createStatement();
+            st.executeUpdate("DELETE FROM DummyEntity WHERE entity_id ="+ dummyEntity.getId());
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+        }
+    }
+
+   
+
+    
+    
+
+    
+    
+    
 }
