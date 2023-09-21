@@ -24,7 +24,7 @@ public class DumyRepository extends Repository {
         Entity entity = null;
         try {
              st = conn.createStatement();
-            ResultSet rs= st.executeQuery("SELECT *FROM dummy_entity entity_id="+ id);
+            ResultSet rs= st.executeQuery("SELECT *FROM dummy_entity WHERE entity_id="+ id);
             rs.next();
             entity =  new DummyEntity(
                 rs.getInt(1),
@@ -91,5 +91,6 @@ public class DumyRepository extends Repository {
     
     
 }
+
 
 
