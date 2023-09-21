@@ -1,5 +1,6 @@
 package student.example.orm.repositories;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -26,9 +27,11 @@ public abstract class Repository {
             e.printStackTrace();
         }
     }
-     // this is an object of type Method
-     //                      |
-     //                      v
+
+
+    // this is an object of type Method
+    //                      |
+    //                      v
     public void create (Entity entity){
 
         Statement st;
@@ -79,15 +82,17 @@ public abstract class Repository {
     }
     
     // to be continued:
-    public Entity read (int id){
+    public Entity read (int id, String fqEntityClassName ){
         Entity entity = null;
+        String [] parts = fqEntityClassName.split("\\.");
+        String entityClassName = parts[parts.length-1];
         
         try {
             
             Statement st;
             st= conn.createStatement();
-            String entityClassName = "Dummy_entity";
-            String sql = "SELECT * FROM " + nct.pascalToSnake(entityClassName)+ " JOIN " + 
+            
+            String sql = "SELECT *  FROM " + nct.pascalToSnake(entityClassName)+ " JOIN " + 
             " " + nct.pascalToSnake("Entity")+ " ON " 
                 + nct.pascalToSnake(entityClassName) + ".entity_id= " 
                 + nct.pascalToSnake("Entity")+ ".id WHERE " 
@@ -95,15 +100,54 @@ public abstract class Repository {
             ResultSet rs = st.executeQuery(sql);
             rs.next();
             
-            //loop through columns use setters:
+            
             ResultSetMetaData rsmd = rs.getMetaData();
             int size = rsmd.getColumnCount();
             
-            System.out.println(size);  //TEST
-            for(int i=1; i<= size; i++){
-                String columnName = nct.pascalToSnake(rsmd.getColumnName(i));
-                System.out.println(columnName+": " +  rs.getObject(i));
+            // 1: invoke class Constructor
+            Class entityClass;
+            try {
+                entityClass = Class.forName(fqEntityClassName);
+                Constructor defaultConstrucor = entityClass.getConstructor();
+                entity = (Entity)defaultConstrucor.newInstance();
+                //loop through columns use setters:
+                for(int i=1; i<= size; i++){
+                    String columnName = nct.snakeToPascal(rsmd.getColumnName(i));
+                    String setterName = "set" + columnName;
+                    //System.out.println(columnName+": " +  rs.getObject(i) + " " + rsmd.getColumnTypeName(i));
+                    if(!(columnName.equals("Discriminator") || columnName.equals("EntityId")) ){
+                        String typeName = rsmd.getColumnTypeName(i);
+                        Class type;
+
+                        if(typeName.equals("int4")) {
+                            type=int.class;
+                            } else {
+                             type = String.class;
+                        }
+
+                        Method method = entityClass.getMethod(setterName, type);
+                        method.invoke(entity, rs.getObject(i) );
+                    }
+                }
+
+
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+            
 
        } catch (SQLException e) {
            e.printStackTrace();
@@ -140,5 +184,3 @@ public abstract class Repository {
     
 
 }
-
-
