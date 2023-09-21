@@ -86,7 +86,7 @@ public abstract class Repository {
             
             Statement st;
             st= conn.createStatement();
-            String entityClassName = "Dummyentity";
+            String entityClassName = "Dummy_entity";
             String sql = "SELECT * FROM " + nct.snakeToPascal(entityClassName)+ " JOIN" + 
             " " + nct.snakeToPascal("Entity")+ " ON " 
                 + nct.snakeToPascal(entityClassName) + ".entity_id =" 
