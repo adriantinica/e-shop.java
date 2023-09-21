@@ -45,7 +45,7 @@ public abstract class Repository {
             System.out.println("class name: "+entityClassName);
 
             st = conn.createStatement();
-            st.executeUpdate("INSERT into "+nct.snakeToPascal("Entity")+" VALUES("+entity.getId()+",'"+ entityClassName +"','"+ entity.getCreatedAt()+"')");
+            st.executeUpdate("INSERT into "+nct.pascalToSnake("Entity")+" VALUES("+entity.getId()+",'"+ entityClassName +"','"+ entity.getCreatedAt()+"')");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public abstract class Repository {
         
         try {
             st = conn.createStatement();
-            String sql = ("INSERT into "+ nct.snakeToPascal(entityClassName)+" VALUES("+ entity.getId());
+            String sql = ("INSERT into "+ nct.pascalToSnake(entityClassName)+" VALUES("+ entity.getId());
 
             Method[] methods = entityClass.getDeclaredMethods();
             for (Method method : methods) {
@@ -87,20 +87,22 @@ public abstract class Repository {
             Statement st;
             st= conn.createStatement();
             String entityClassName = "Dummy_entity";
-            String sql = "SELECT * FROM " + nct.snakeToPascal(entityClassName)+ " JOIN" + 
-            " " + nct.snakeToPascal("Entity")+ " ON " 
-                + nct.snakeToPascal(entityClassName) + ".entity_id =" 
-                + nct.snakeToPascal("Entity")+ ".id WHERE " 
-                + nct.snakeToPascal("Entity")+".id = " + id;
+            String sql = "SELECT * FROM " + nct.pascalToSnake(entityClassName)+ " JOIN " + 
+            " " + nct.pascalToSnake("Entity")+ " ON " 
+                + nct.pascalToSnake(entityClassName) + ".entity_id= " 
+                + nct.pascalToSnake("Entity")+ ".id WHERE " 
+                + nct.pascalToSnake("Entity")+".id =  " + id;
             ResultSet rs = st.executeQuery(sql);
             rs.next();
             
             //loop through columns use setters:
             ResultSetMetaData rsmd = rs.getMetaData();
             int size = rsmd.getColumnCount();
+            
+            System.out.println(size);  //TEST
             for(int i=1; i<= size; i++){
                 String columnName = nct.pascalToSnake(rsmd.getColumnName(i));
-                System.out.println(columnName+": "+  rs.getObject(i));
+                System.out.println(columnName+": " +  rs.getObject(i));
             }
 
        } catch (SQLException e) {
@@ -138,4 +140,5 @@ public abstract class Repository {
     
 
 }
+
 
