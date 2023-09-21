@@ -1,7 +1,10 @@
 package student.example.orm.entities;
 
 public abstract class Entity {
-    
+
+    //this is an object of type Field
+    //         |
+    //         v
     private int id;
     private String createdAt; // YYYY-MM-DD , HH:MM:SS
 
@@ -16,7 +19,10 @@ public abstract class Entity {
         this.id = id;
         this.createdAt = createdAt;
     }
-
+    
+    // this is an object of type Method
+    //         |
+    //         v
     public int getId() {
         return id;
     }
